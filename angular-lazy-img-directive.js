@@ -3,11 +3,12 @@ angular.module('angularLazyImg').directive('lazyImg', [
     'use strict';
 
     function link(scope, element, attributes) {
-      var observer, lazyImage;
+      var lazyImage;
       lazyImage = new LazyImgMagic(element);
-      observer = attributes.$observe('lazyImg', function(newSource){
-        lazyImage.setSource(newSource);
-        observer();
+      attributes.$observe('lazyImg', function(newSource){
+        if (newSource){
+          lazyImage.setSource(newSource);
+        }
       });
       scope.$on('$destroy', function(){
         LazyImgMagic.removeImage(lazyImage);

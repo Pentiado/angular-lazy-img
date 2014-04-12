@@ -1,4 +1,4 @@
-angular.module('angularLazyImg', []).factory('lazyImgHelpers', [
+angular.module('angularLazyImg').factory('lazyImgHelpers', [
   '$window', function($window){
     'use strict';
 

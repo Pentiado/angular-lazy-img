@@ -19,5 +19,4 @@ angular.module('angularLazyImg').provider('lazyImgConfig', function() {
   this.setOptions = function(options) {
     angular.extend(this.options, options);
   };
-
 });

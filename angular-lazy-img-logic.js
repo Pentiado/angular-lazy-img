@@ -1,6 +1,6 @@
 angular.module('angularLazyImg', []);
 
-angular.module('angularLazyImg', []).factory('LazyImgMagic', [
+angular.module('angularLazyImg').factory('LazyImgMagic', [
   '$window', 'lazyImgConfig', 'lazyImgHelpers',
   function($window, lazyImgConfig, lazyImgHelpers){
     'use strict';
@@ -9,6 +9,7 @@ angular.module('angularLazyImg', []).factory('LazyImgMagic', [
     var checkImagesT, saveWinOffsetT;
 
     images = [];
+    count = 0;
     isListening = false;
     options = lazyImgConfig.getOptions();
     $win = angular.element($window);
@@ -20,7 +21,7 @@ angular.module('angularLazyImg', []).factory('LazyImgMagic', [
     function checkImages() {
       for(var i = 0; i < count; i++){
         var image = images[i];
-        if(lazyImgHelpers.isElementInView(image.elem, lazyImgConfig.offset, winDimensions)) {
+        if(lazyImgHelpers.isElementInView(image.$elem[0], options.offset, winDimensions)) {
           loadImage(image);
           removeImage(i);
           i--;
@@ -32,7 +33,7 @@ angular.module('angularLazyImg', []).factory('LazyImgMagic', [
     checkImagesT = lazyImgHelpers.throttle(checkImages, 25);
 
     function listen(param){
-      $win[param]('scroll', checkImagesT);
+      (options.container || $win)[param]('scroll', checkImagesT);
       $win[param]('resize', checkImagesT);
       $win[param]('resize', saveWinOffsetT);
     }
@@ -56,15 +57,15 @@ angular.module('angularLazyImg', []).factory('LazyImgMagic', [
     }
 
     function loadImage(photo){
-      if(photo.elem.offsetWidth > 0 && photo.elem.offsetHeight > 0) {
+      if(photo.$elem[0].offsetWidth > 0 && photo.$elem[0].offsetHeight > 0) {
         var img = new Image();
         img.onerror = function() {
           if(photo.onError){ photo.onError(); }
-          photo.elem.addClass(options.errorClass);
+          photo.$elem.addClass(options.errorClass);
         };
         img.onload = function() {
-          setPhotoSrc(photo.elem, photo.src);
-          photo.addClass(options.successClass);
+          setPhotoSrc(photo.$elem, photo.src);
+          photo.$elem.addClass(options.successClass);
           if(photo.success){ photo.success(); }
         };
         img.src = photo.src;
@@ -72,8 +73,8 @@ angular.module('angularLazyImg', []).factory('LazyImgMagic', [
     }
 
     function setPhotoSrc($elem, src){
-      var isImage = $elem.nodeName.toLowerCase() === 'img';
-      isImage ? $elem.src = src : $elem.css('background-image', 'url("' + src + '")');
+      var isImage = $elem[0].nodeName.toLowerCase() === 'img';
+      isImage ? $elem[0].src = src : $elem.css('background-image', 'url("' + src + '")');
     }
 
     // PHOTO
@@ -84,6 +85,7 @@ angular.module('angularLazyImg', []).factory('LazyImgMagic', [
     Photo.prototype.setSource = function(source){
       this.src = source;
       images.push(this);
+      count++;
       if (!isListening){ startListenig(); }
     };
 
