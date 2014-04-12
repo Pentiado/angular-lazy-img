@@ -5,7 +5,6 @@ angular.module('angularLazyImg').directive('lazyImg', [
     function link(scope, element, attributes) {
       var observer, lazyImage;
       lazyImage = new LazyImgMagic(element);
-      LazyImgMagic.addImage(element);
       observer = attributes.$observe('lazyImg', function(newSource){
         lazyImage.setSource(newSource);
         observer();
@@ -15,9 +14,9 @@ angular.module('angularLazyImg').directive('lazyImg', [
       });
     }
 
-    return({
+    return {
       link: link,
       restrict: 'A'
-    });
+    };
   }
 ]);
