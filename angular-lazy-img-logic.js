@@ -16,12 +16,12 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     winDimensions = lazyImgHelpers.getWinDimensions();
     saveWinOffsetT = lazyImgHelpers.throttle(function(){
       winDimensions = lazyImgHelpers.getWinDimensions();
-    }, 50);
+    }, 60);
 
     function checkImages() {
       for(var i = 0; i < count; i++){
         var image = images[i];
-        if(lazyImgHelpers.isElementInView(image.$elem[0], options.offset, winDimensions)) {
+        if(lazyImgHelpers.isElementInView(image.$elem[0], options.offset, winDimensions)){
           loadImage(image);
           removeImage(i);
           i--;
@@ -30,10 +30,11 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
       if(count === 0){ stopListening(); }
     }
 
-    checkImagesT = lazyImgHelpers.throttle(checkImages, 25);
+    checkImagesT = lazyImgHelpers.throttle(checkImages, 30);
 
     function listen(param){
       (options.container || $win)[param]('scroll', checkImagesT);
+      (options.container || $win)[param]('touchmove', checkImagesT);
       $win[param]('resize', checkImagesT);
       $win[param]('resize', saveWinOffsetT);
     }
@@ -60,13 +61,17 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
       if(photo.$elem[0].offsetWidth > 0 && photo.$elem[0].offsetHeight > 0) {
         var img = new Image();
         img.onerror = function() {
-          if(photo.onError){ photo.onError(); }
-          photo.$elem.addClass(options.errorClass);
+          if(options.errorClass){
+            photo.$elem.addClass(options.errorClass);
+          }
+          options.onError(photo);
         };
         img.onload = function() {
           setPhotoSrc(photo.$elem, photo.src);
-          photo.$elem.addClass(options.successClass);
-          if(photo.success){ photo.success(); }
+          if(options.successClass){
+            photo.$elem.addClass(options.successClass);
+          }
+          options.onSuccess(photo);
         };
         img.src = photo.src;
       }

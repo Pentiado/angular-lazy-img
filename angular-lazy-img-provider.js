@@ -3,8 +3,10 @@ angular.module('angularLazyImg').provider('lazyImgConfig', function() {
 
   this.options = {
     offset       : 100,
-    errorClass   : 'lazy-error',
-    successClass : 'lazy-success'
+    errorClass   : null,
+    successClass : null,
+    onError      : function(){},
+    onSuccess    : function(){}
   };
 
   this.$get = function() {

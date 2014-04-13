@@ -7,6 +7,7 @@ angular.module('angularLazyImg').directive('lazyImg', [
       lazyImage = new LazyImgMagic(element);
       attributes.$observe('lazyImg', function(newSource){
         if (newSource){
+          // in angular 1.3 it might be nice to remove observer here
           lazyImage.setSource(newSource);
         }
       });
