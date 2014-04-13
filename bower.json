@@ -1,0 +1,16 @@
+{
+  "name": "angular-lazy-img",
+  "version": "1.0.0",
+  "main": "./release/angular-lazy-img.js",
+  "dependencies": {
+    "angular": ">= 1.0.8"
+  },
+  "ignore": [
+    "**/.*",
+    "src",
+    "node_modules",
+    "package.json",
+    "tests",
+    "gulpfile.js"
+  ]
+}
