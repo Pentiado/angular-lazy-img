@@ -205,7 +205,7 @@ angular.module('angularLazyImg').directive('lazyImg', [
         }
       });
       scope.$on('$destroy', function(){
-        LazyImgMagic.removeImage(lazyImage);
+        lazyImage.removeImage();
       });
     }
 
