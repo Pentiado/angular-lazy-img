@@ -9,11 +9,11 @@ angular.module('angularLazyImg').factory('lazyImgHelpers', [
       };
     }
 
-    function isElementInView(elem, offset, win) {
+    function isElementInView(elem, offset, winDimensions) {
       var rect = elem.getBoundingClientRect();
-      var bottomline = win.height + offset;
+      var bottomline = winDimensions.height + offset;
       return (
-       rect.left >= 0 && rect.right <= win.width + offset && (
+       rect.left >= 0 && rect.right <= winDimensions.width + offset && (
          rect.top >= 0 && rect.top <= bottomline ||
          rect.bottom <= bottomline && rect.bottom >= 0 - offset
         )

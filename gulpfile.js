@@ -1,9 +1,9 @@
-'use strict';
-
-var gulp = require('gulp');
+var gulp   = require('gulp');
 var concat = require('gulp-concat');
-var clean = require('gulp-clean');
+var clean  = require('gulp-clean');
 var uglify = require('gulp-uglify');
+var karma  = require('gulp-karma');
+var jshint = require('gulp-jshint');
 
 var srcFiles = [
   './src/angular-lazy-img-logic.js',
@@ -31,3 +31,32 @@ gulp.task('minify', ['clean'], function() {
 });
 
 gulp.task('default', ['clean', 'combine', 'minify']);
+
+
+// JSHINT
+gulp.task('lint', function() {
+  gulp.src('./src/*.js')
+  .pipe(jshint())
+  .pipe(jshint.reporter('jshint-stylish'));
+});
+
+gulp.task('watch', function() {
+  gulp.watch(srcFiles, ['lint']);
+});
+
+// TESTS
+var testFiles = [
+  'bower_components/angular/angular.min.js',
+  'bower_components/angular-mocks/angular-mocks.js',
+  'tests/*.js',
+].concat(srcFiles);
+
+gulp.task('test', ['watch'], function() {
+  return gulp.src(testFiles)
+    .pipe(karma({
+      configFile: 'karma.conf.js',
+      action: 'watch'
+    }));
+});
+
+

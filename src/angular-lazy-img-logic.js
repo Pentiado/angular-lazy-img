@@ -91,8 +91,11 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     }
 
     function setPhotoSrc($elem, src){
-      var isImage = $elem[0].nodeName.toLowerCase() === 'img';
-      isImage ? $elem[0].src = src : $elem.css('background-image', 'url("' + src + '")');
+      if ($elem[0].nodeName.toLowerCase() === 'img') {
+        $elem[0].src = src;
+      } else {
+        $elem.css('background-image', 'url("' + src + '")');
+      }
     }
 
     // PHOTO
