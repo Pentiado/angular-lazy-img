@@ -1,10 +1,8 @@
 describe('Unit: lazy-img-helpers', function(){
-  var lazyImgHelpers = {};
-  var $window = {};
+  var lazyImgHelpers;
   beforeEach(angular.mock.module('angularLazyImg'));
-  beforeEach(inject(function(_lazyImgHelpers_, _$window_){
+  beforeEach(inject(function(_lazyImgHelpers_){
     lazyImgHelpers = _lazyImgHelpers_;
-    $window = _$window_;
   }));
 
   describe('getWinDimensions', function() {

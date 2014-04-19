@@ -31,7 +31,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
       winDimensions = lazyImgHelpers.getWinDimensions();
     }, 60);
 
-    function checkImages() {
+    function checkImages(){
       for(var i = 0; i < count; i++){
         var image = images[i];
         if(lazyImgHelpers.isElementInView(image.$elem[0], options.offset, winDimensions)){
@@ -73,13 +73,13 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     function loadImage(photo){
       if(photo.$elem[0].offsetWidth > 0 && photo.$elem[0].offsetHeight > 0) {
         var img = new Image();
-        img.onerror = function() {
+        img.onerror = function(){
           if(options.errorClass){
             photo.$elem.addClass(options.errorClass);
           }
           options.onError(photo);
         };
-        img.onload = function() {
+        img.onload = function(){
           setPhotoSrc(photo.$elem, photo.src);
           if(options.successClass){
             photo.$elem.addClass(options.successClass);
