@@ -31,7 +31,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
       winDimensions = lazyImgHelpers.getWinDimensions();
     }, 60);
 
-    function checkImages() {
+    function checkImages(){
       for(var i = 0; i < count; i++){
         var image = images[i];
         if(lazyImgHelpers.isElementInView(image.$elem[0], options.offset, winDimensions)){
@@ -71,28 +71,29 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     }
 
     function loadImage(photo){
-      if(photo.$elem[0].offsetWidth > 0 && photo.$elem[0].offsetHeight > 0) {
-        var img = new Image();
-        img.onerror = function() {
-          if(options.errorClass){
-            photo.$elem.addClass(options.errorClass);
-          }
-          options.onError(photo);
-        };
-        img.onload = function() {
-          setPhotoSrc(photo.$elem, photo.src);
-          if(options.successClass){
-            photo.$elem.addClass(options.successClass);
-          }
-          options.onSuccess(photo);
-        };
-        img.src = photo.src;
-      }
+      var img = new Image();
+      img.onerror = function(){
+        if(options.errorClass){
+          photo.$elem.addClass(options.errorClass);
+        }
+        options.onError(photo);
+      };
+      img.onload = function(){
+        setPhotoSrc(photo.$elem, photo.src);
+        if(options.successClass){
+          photo.$elem.addClass(options.successClass);
+        }
+        options.onSuccess(photo);
+      };
+      img.src = photo.src;
     }
 
     function setPhotoSrc($elem, src){
-      var isImage = $elem[0].nodeName.toLowerCase() === 'img';
-      isImage ? $elem[0].src = src : $elem.css('background-image', 'url("' + src + '")');
+      if ($elem[0].nodeName.toLowerCase() === 'img') {
+        $elem[0].src = src;
+      } else {
+        $elem.css('background-image', 'url("' + src + '")');
+      }
     }
 
     // PHOTO
@@ -152,11 +153,11 @@ angular.module('angularLazyImg').factory('lazyImgHelpers', [
       };
     }
 
-    function isElementInView(elem, offset, win) {
+    function isElementInView(elem, offset, winDimensions) {
       var rect = elem.getBoundingClientRect();
-      var bottomline = win.height + offset;
+      var bottomline = winDimensions.height + offset;
       return (
-       rect.left >= 0 && rect.right <= win.width + offset && (
+       rect.left >= 0 && rect.right <= winDimensions.width + offset && (
          rect.top >= 0 && rect.top <= bottomline ||
          rect.bottom <= bottomline && rect.bottom >= 0 - offset
         )
@@ -196,8 +197,7 @@ angular.module('angularLazyImg').directive('lazyImg', [
     'use strict';
 
     function link(scope, element, attributes) {
-      var lazyImage;
-      lazyImage = new LazyImgMagic(element);
+      var lazyImage = new LazyImgMagic(element);
       attributes.$observe('lazyImg', function(newSource){
         if (newSource){
           // in angular 1.3 it might be nice to remove observer here

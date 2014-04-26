@@ -22,7 +22,7 @@
     "gulp-rename": "~1.2.0",
     "gulp-clean": "~0.2.4",
     "gulp-concat": "~2.2.0",
-    "gulp": "~3.6.0",
+    "gulp": "~3.6.2",
     "gulp-uglify": "~0.2.1",
     "karma": "~0.12.9",
     "gulp-karma": "0.0.4",

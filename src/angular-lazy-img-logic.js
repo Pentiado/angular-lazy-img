@@ -71,23 +71,21 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     }
 
     function loadImage(photo){
-      if(photo.$elem[0].offsetWidth > 0 && photo.$elem[0].offsetHeight > 0) {
-        var img = new Image();
-        img.onerror = function(){
-          if(options.errorClass){
-            photo.$elem.addClass(options.errorClass);
-          }
-          options.onError(photo);
-        };
-        img.onload = function(){
-          setPhotoSrc(photo.$elem, photo.src);
-          if(options.successClass){
-            photo.$elem.addClass(options.successClass);
-          }
-          options.onSuccess(photo);
-        };
-        img.src = photo.src;
-      }
+      var img = new Image();
+      img.onerror = function(){
+        if(options.errorClass){
+          photo.$elem.addClass(options.errorClass);
+        }
+        options.onError(photo);
+      };
+      img.onload = function(){
+        setPhotoSrc(photo.$elem, photo.src);
+        if(options.successClass){
+          photo.$elem.addClass(options.successClass);
+        }
+        options.onSuccess(photo);
+      };
+      img.src = photo.src;
     }
 
     function setPhotoSrc($elem, src){
