@@ -1,5 +1,5 @@
 angular.module('angularLazyImg').directive('lazyImg', [
-  'LazyImgMagic', function(LazyImgMagic){
+  '$rootScope', 'LazyImgMagic', function($rootScope, LazyImgMagic){
     'use strict';
 
     function link(scope, element, attributes) {
@@ -12,6 +12,9 @@ angular.module('angularLazyImg').directive('lazyImg', [
       });
       scope.$on('$destroy', function(){
         lazyImage.removeImage();
+      });
+      $rootScope.$on('lazyImg.runCheck', function() {
+          lazyImage.checkImages();
       });
     }
 

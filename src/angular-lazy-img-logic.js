@@ -66,7 +66,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
 
     function removeImage(image){
       var index = images.indexOf(image);
-      if(index != -1) {
+      if(index !== -1) {
         images.splice(index, 1);
       }
     }
@@ -111,6 +111,10 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     Photo.prototype.removeImage = function(){
       removeImage(this);
       if(images.length === 0){ stopListening(); }
+    };
+
+    Photo.prototype.checkImages = function(){
+      checkImages();
     };
 
     return Photo;
