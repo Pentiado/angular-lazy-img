@@ -18,11 +18,10 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
   function($window, lazyImgConfig, lazyImgHelpers){
     'use strict';
 
-    var winDimensions, $win, images, count, isListening, options;
+    var winDimensions, $win, images, isListening, options;
     var checkImagesT, saveWinOffsetT;
 
     images = [];
-    count = 0;
     isListening = false;
     options = lazyImgConfig.getOptions();
     $win = angular.element($window);
@@ -32,15 +31,15 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     }, 60);
 
     function checkImages(){
-      for(var i = 0; i < count; i++){
+      for(var i = 0, l = images.length; i < l; i++){
         var image = images[i];
-        if(lazyImgHelpers.isElementInView(image.$elem[0], options.offset, winDimensions)){
+        if(image && lazyImgHelpers.isElementInView(image.$elem[0], options.offset, winDimensions)){
           loadImage(image);
-          removeImage(i);
+          removeImage(image);
           i--;
         }
       }
-      if(count === 0){ stopListening(); }
+      if(images.length === 0){ stopListening(); }
     }
 
     checkImagesT = lazyImgHelpers.throttle(checkImages, 30);
@@ -52,7 +51,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
       $win[param]('resize', saveWinOffsetT);
     }
 
-    function startListenig(){
+    function startListening(){
       isListening = true;
       setTimeout(function(){
         checkImages();
@@ -65,9 +64,11 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
       listen('off');
     }
 
-    function removeImage(i){
-      images.splice(i, 1);
-      count--;
+    function removeImage(image){
+      var index = images.indexOf(image);
+      if(index !== -1) {
+        images.splice(index, 1);
+      }
     }
 
     function loadImage(photo){
@@ -104,20 +105,23 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     Photo.prototype.setSource = function(source){
       this.src = source;
       images.push(this);
-      count++;
-      if (!isListening){ startListenig(); }
+      if (!isListening){ startListening(); }
     };
 
     Photo.prototype.removeImage = function(){
-      var index = images.indexOf(this);
-      removeImage(index);
-      if(count === 0){ stopListening(); }
+      removeImage(this);
+      if(images.length === 0){ stopListening(); }
+    };
+
+    Photo.prototype.checkImages = function(){
+      checkImages();
     };
 
     return Photo;
 
   }
 ]);
+
 angular.module('angularLazyImg').provider('lazyImgConfig', function() {
   'use strict';
 
@@ -193,7 +197,7 @@ angular.module('angularLazyImg').factory('lazyImgHelpers', [
   }
 ]);
 angular.module('angularLazyImg').directive('lazyImg', [
-  'LazyImgMagic', function(LazyImgMagic){
+  '$rootScope', 'LazyImgMagic', function($rootScope, LazyImgMagic){
     'use strict';
 
     function link(scope, element, attributes) {
@@ -206,6 +210,9 @@ angular.module('angularLazyImg').directive('lazyImg', [
       });
       scope.$on('$destroy', function(){
         lazyImage.removeImage();
+      });
+      $rootScope.$on('lazyImg.runCheck', function() {
+          lazyImage.checkImages();
       });
     }
 

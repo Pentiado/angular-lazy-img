@@ -39,6 +39,12 @@ You want to lazy load background image? No problem, add directive to anything yo
   <div lazy-img='photo.jpeg'></div>
   ```
 
+If you need to run the image check manually (for example when clicking on tabs that filter your image result), you can trigger it that way:
+
+  ```js
+  $rootScope.$emit('lazyImg.runCheck');
+  ```
+
 ### Configuration
 
 Inside your config require 'lazyImgConfigProvider' and set custom options.
