@@ -19,7 +19,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     'use strict';
 
     var winDimensions, $win, images, isListening, options;
-    var checkImagesT, saveWinOffsetT;
+    var checkImagesT, saveWinOffsetT, containers;
 
     images = [];
     isListening = false;
@@ -29,6 +29,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     saveWinOffsetT = lazyImgHelpers.throttle(function(){
       winDimensions = lazyImgHelpers.getWinDimensions();
     }, 60);
+    containers = [options.container || $win];
 
     function checkImages(){
       for(var i = 0, l = images.length; i < l; i++){
@@ -45,8 +46,10 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     checkImagesT = lazyImgHelpers.throttle(checkImages, 30);
 
     function listen(param){
-      (options.container || $win)[param]('scroll', checkImagesT);
-      (options.container || $win)[param]('touchmove', checkImagesT);
+      containers.forEach(function (container) {
+        container[param]('scroll', checkImagesT);
+        container[param]('touchmove', checkImagesT);
+      });
       $win[param]('resize', checkImagesT);
       $win[param]('resize', saveWinOffsetT);
     }
@@ -115,6 +118,18 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
 
     Photo.prototype.checkImages = function(){
       checkImages();
+    };
+
+    Photo.addContainer = function (container) {
+      stopListening();
+      containers.push(container);
+      startListening();
+    };
+
+    Photo.removeContainer = function (container) {
+      stopListening();
+      containers.splice(containers.indexOf(container), 1);
+      startListening();
     };
 
     return Photo;

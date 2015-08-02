@@ -15,19 +15,19 @@ describe('Unit: lazy-img-helpers', function(){
 
   describe('isElementInView', function() {
     it('should return false when not in view', function(){
-      $element = angular.element('<div style="width: 10; height: 10; position: absolute; top: -9999px;"></div>');
+      $element = angular.element('<div style="width: 10px; height: 10px; position: absolute; top: -9999px;"></div>');
       angular.element(document.body).append($element);
       var inView = lazyImgHelpers.isElementInView($element[0], 0, {width: 100, height: 100});
       expect(inView).to.equal(false);
     });
     it('should return true when offset enough big', function(){
-      $element = angular.element('<div style="width: 10; height: 10; position: absolute; top: -9999px;"></div>');
+      $element = angular.element('<div style="width: 10px; height: 10px; position: absolute; top: -9999px;"></div>');
       angular.element(document.body).append($element);
       var inView = lazyImgHelpers.isElementInView($element[0], 999999, {width: 100, height: 100});
       expect(inView).to.equal(true);
     });
     it('should return true when in view', function(){
-      $element = angular.element('<div style="width: 10; height: 10; position: absolute;"></div>');
+      $element = angular.element('<div style="width: 10px; height: 10px; position: absolute;"></div>');
       angular.element(document.body).append($element);
       var inView = lazyImgHelpers.isElementInView($element[0], 0, {width: 1000, height: 1000});
       expect(inView).to.equal(true);
