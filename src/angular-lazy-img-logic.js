@@ -32,12 +32,11 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     containers = [options.container || $win];
 
     function checkImages(){
-      for(var i = 0, l = images.length; i < l; i++){
+      for(var i = images.length - 1; i >= 0; i--){
         var image = images[i];
         if(image && lazyImgHelpers.isElementInView(image.$elem[0], options.offset, winDimensions)){
           loadImage(image);
-          removeImage(image);
-          i--;
+          images.splice(i, 1);
         }
       }
       if(images.length === 0){ stopListening(); }
@@ -107,7 +106,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
 
     Photo.prototype.setSource = function(source){
       this.src = source;
-      images.push(this);
+      images.unshift(this);
       if (!isListening){ startListening(); }
     };
 
