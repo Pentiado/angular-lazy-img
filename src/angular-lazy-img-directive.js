@@ -17,6 +17,9 @@ angular.module('angularLazyImg')
         $rootScope.$on('lazyImg.runCheck', function () {
           lazyImage.checkImages();
         });
+        $rootScope.$on('lazyImg:refresh', function () {
+          lazyImage.checkImages();
+        });
       }
 
       return {
