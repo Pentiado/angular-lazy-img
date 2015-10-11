@@ -14,8 +14,8 @@
 angular.module('angularLazyImg', []);
 
 angular.module('angularLazyImg').factory('LazyImgMagic', [
-  '$window', 'lazyImgConfig', 'lazyImgHelpers',
-  function($window, lazyImgConfig, lazyImgHelpers){
+  '$window', '$rootScope', 'lazyImgConfig', 'lazyImgHelpers',
+  function($window, $rootScope, lazyImgConfig, lazyImgHelpers){
     'use strict';
 
     var winDimensions, $win, images, isListening, options;
@@ -79,6 +79,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
         if(options.errorClass){
           photo.$elem.addClass(options.errorClass);
         }
+        $rootScope.$emit('lazyImg:error', photo);
         options.onError(photo);
       };
       img.onload = function(){
@@ -86,6 +87,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
         if(options.successClass){
           photo.$elem.addClass(options.successClass);
         }
+        $rootScope.$emit('lazyImg:success', photo);
         options.onSuccess(photo);
       };
       img.src = photo.src;
