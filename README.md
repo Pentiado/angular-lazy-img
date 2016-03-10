@@ -8,7 +8,7 @@ Lightweight lazy load images plugin. Only 1kb after gziping. Pure JavaScript, on
 2. Include `angular-lazy-img` in your HTML.
 
     ```html
-    <script src="<your-bower-components>/angular-lazy-img/angular-lazy-img.js"></script>
+    <script src="<your-bower-components>/angular-lazy-img/release/angular-lazy-img.js"></script>
     ```
 
 3. Inject the `angular-lazy-img` module in your application.
