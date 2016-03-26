@@ -67,6 +67,8 @@ Inside your config require 'lazyImgConfigProvider' and set custom options.
     });
   }])
   ```
+#### Use a scrollable container in a dynamic page
+Just add ```lazyImgContainer``` attribute to your scrollable container to be considered when you scroll him.
 
 ## Author
 
