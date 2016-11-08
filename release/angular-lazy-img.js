@@ -74,12 +74,8 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     }
 
     function loadImage(photo){
-      if(options.loadingClass){
-        photo.$elem.addClass(options.loadingClass);
-      }
       var img = new Image();
       img.onerror = function(){
-        photo.$elem.removeClass(options.loadingClass);
         if(options.errorClass){
           photo.$elem.addClass(options.errorClass);
         }
@@ -90,7 +86,6 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
         options.onError(photo);
       };
       img.onload = function(){
-        photo.$elem.removeClass(options.loadingClass);
         setPhotoSrc(photo.$elem, photo.src);
         if(options.successClass){
           photo.$elem.addClass(options.successClass);
@@ -155,7 +150,6 @@ angular.module('angularLazyImg').provider('lazyImgConfig', function() {
 
   this.options = {
     offset       : 100,
-    loadingClass : null,
     errorClass   : null,
     successClass : null,
     onError      : function(){},
