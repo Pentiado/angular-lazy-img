@@ -79,6 +79,9 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
         if(options.errorClass){
           photo.$elem.addClass(options.errorClass);
         }
+        if(photo.errorSrc){
+          setPhotoSrc(photo.$elem, photo.errorSrc);
+        }
         $rootScope.$emit('lazyImg:error', photo);
         options.onError(photo);
       };
@@ -110,6 +113,10 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
       this.src = source;
       images.unshift(this);
       if (!isListening){ startListening(); }
+    };
+
+    Photo.prototype.setErrorSource = function(errorSource){
+      this.errorSrc = errorSource;
     };
 
     Photo.prototype.removeImage = function(){

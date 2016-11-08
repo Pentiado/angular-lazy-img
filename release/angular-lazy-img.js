@@ -74,15 +74,23 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     }
 
     function loadImage(photo){
+      if(options.loadingClass){
+        photo.$elem.addClass(options.loadingClass);
+      }
       var img = new Image();
       img.onerror = function(){
+        photo.$elem.removeClass(options.loadingClass);
         if(options.errorClass){
           photo.$elem.addClass(options.errorClass);
+        }
+        if(photo.errorSrc){
+          setPhotoSrc(photo.$elem, photo.errorSrc);
         }
         $rootScope.$emit('lazyImg:error', photo);
         options.onError(photo);
       };
       img.onload = function(){
+        photo.$elem.removeClass(options.loadingClass);
         setPhotoSrc(photo.$elem, photo.src);
         if(options.successClass){
           photo.$elem.addClass(options.successClass);
@@ -110,6 +118,10 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
       this.src = source;
       images.unshift(this);
       if (!isListening){ startListening(); }
+    };
+
+    Photo.prototype.setErrorSource = function(errorSource){
+      this.errorSrc = errorSource;
     };
 
     Photo.prototype.removeImage = function(){
@@ -143,6 +155,7 @@ angular.module('angularLazyImg').provider('lazyImgConfig', function() {
 
   this.options = {
     offset       : 100,
+    loadingClass : null,
     errorClass   : null,
     successClass : null,
     onError      : function(){},
@@ -218,21 +231,39 @@ angular.module('angularLazyImg')
       'use strict';
 
       function link(scope, element, attributes) {
-        var lazyImage = new LazyImgMagic(element);
-        attributes.$observe('lazyImg', function (newSource) {
+        scope.lazyImage = new LazyImgMagic(element);
+        var deregister = attributes.$observe('lazyImg', function (newSource) {
           if (newSource) {
-            // in angular 1.3 it might be nice to remove observer here
-            lazyImage.setSource(newSource);
+            deregister();
+            scope.lazyImage.setSource(newSource);
           }
         });
         scope.$on('$destroy', function () {
-          lazyImage.removeImage();
+          scope.lazyImage.removeImage();
         });
         $rootScope.$on('lazyImg.runCheck', function () {
-          lazyImage.checkImages();
+          scope.lazyImage.checkImages();
         });
         $rootScope.$on('lazyImg:refresh', function () {
-          lazyImage.checkImages();
+          scope.lazyImage.checkImages();
+        });
+      }
+
+      return {
+        link: link,
+        restrict: 'A'
+      };
+    }
+  ])
+  .directive('lazyImgError', [
+    function () {
+      'use strict';
+
+      function link(scope, element, attributes) {
+
+        var deregister = scope.$watch('lazyImage', function(lazyImage) {
+          lazyImage.setErrorSource(attributes.lazyImgError);
+          deregister();
         });
       }
 
