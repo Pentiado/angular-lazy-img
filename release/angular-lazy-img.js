@@ -29,7 +29,8 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     saveWinOffsetT = lazyImgHelpers.throttle(function(){
       winDimensions = lazyImgHelpers.getWinDimensions();
     }, 60);
-    containers = [options.container || $win];
+    options.container = options.containers || options.container;
+    containers = options.container ? [].concat(options.container) : [$win];
 
     function checkImages(){
       for(var i = images.length - 1; i >= 0; i--){
@@ -218,10 +219,10 @@ angular.module('angularLazyImg')
       'use strict';
 
       function link(scope, element, attributes) {
-        var lazyImage = new LazyImgMagic(element);
-        attributes.$observe('lazyImg', function (newSource) {
+        var lazyImage = new LazyImgMagic(element),
+            deregister = attributes.$observe('lazyImg', function (newSource) {
           if (newSource) {
-            // in angular 1.3 it might be nice to remove observer here
+            deregister();
             lazyImage.setSource(newSource);
           }
         });

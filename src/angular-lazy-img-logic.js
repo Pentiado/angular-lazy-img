@@ -29,7 +29,8 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     saveWinOffsetT = lazyImgHelpers.throttle(function(){
       winDimensions = lazyImgHelpers.getWinDimensions();
     }, 60);
-    containers = [options.container || $win];
+    options.container = options.containers || options.container;
+    containers = options.container ? [].concat(options.container) : [$win];
 
     function checkImages(){
       for(var i = images.length - 1; i >= 0; i--){
