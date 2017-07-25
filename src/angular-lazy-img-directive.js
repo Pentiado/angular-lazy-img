@@ -13,13 +13,21 @@ angular.module('angularLazyImg')
         });
         scope.$on('$destroy', function () {
           lazyImage.removeImage();
+          if(!!$rootScope.lazyImgRefreshEvents) {
+            for (var i=0; i< $rootScope.lazyImgRefreshEvents.length; i++) {
+              $rootScope.lazyImgRefreshEvents[i]();
+            }
+          }
         });
         $rootScope.$on('lazyImg.runCheck', function () {
           lazyImage.checkImages();
         });
-        $rootScope.$on('lazyImg:refresh', function () {
+        if(!$rootScope.lazyImgRefreshEvents) {
+          $rootScope.lazyImgRefreshEvents = [];
+        }
+        $rootScope.lazyImgRefreshEvents.push($rootScope.$on('lazyImg:refresh', function () {
           lazyImage.checkImages();
-        });
+        }));
       }
 
       return {
