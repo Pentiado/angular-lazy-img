@@ -17,6 +17,7 @@ angular.module('angularLazyImg')
             for (var i=0; i< $rootScope.lazyImgRefreshEvents.length; i++) {
               $rootScope.lazyImgRefreshEvents[i]();
             }
+            $rootScope.lazyImgRefreshEvents = [];
           }
         });
         $rootScope.$on('lazyImg.runCheck', function () {
