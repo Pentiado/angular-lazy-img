@@ -69,7 +69,7 @@ Inside your config require 'lazyImgConfigProvider' and set custom options.
       successClass: 'success', // in case of loading image success what class should be added (default = null)
       onError: function(image){}, // function fired on loading error
       onSuccess: function(image){}, // function fired on loading success
-      container: angular.element(scrollable) // if scrollable container is not $window then provide it here
+      container: angular.element(scrollable) // if scrollable container is not $window then provide it here. This can also be an array of elements.
     });
   }])
   ```
