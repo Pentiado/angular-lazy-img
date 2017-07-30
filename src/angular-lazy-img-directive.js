@@ -13,6 +13,12 @@ angular.module('angularLazyImg')
         });
         scope.$on('$destroy', function () {
           scope.lazyImage.removeImage();
+          if(!!$rootScope.lazyImgRefreshEvents) {
+            for (var i=0; i< $rootScope.lazyImgRefreshEvents.length; i++) {
+              $rootScope.lazyImgRefreshEvents[i]();
+            }
+            $rootScope.lazyImgRefreshEvents = [];
+          }
         });
         $rootScope.$on('lazyImg.runCheck', function () {
           scope.lazyImage.checkImages();
@@ -33,11 +39,16 @@ angular.module('angularLazyImg')
       'use strict';
 
       function link(scope, element, attributes) {
-
         var deregister = scope.$watch('lazyImage', function(lazyImage) {
           lazyImage.setErrorSource(attributes.lazyImgError);
           deregister();
         });
+        if(!$rootScope.lazyImgRefreshEvents) {
+          $rootScope.lazyImgRefreshEvents = [];
+        }
+        $rootScope.lazyImgRefreshEvents.push($rootScope.$on('lazyImg:refresh', function () {
+          lazyImage.checkImages();
+        }));
       }
 
       return {
