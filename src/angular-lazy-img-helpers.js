@@ -11,12 +11,12 @@ angular.module('angularLazyImg').factory('lazyImgHelpers', [
 
     function isElementInView(elem, offset, winDimensions) {
       var rect = elem.getBoundingClientRect();
-      var bottomline = winDimensions.height + offset;
       return (
-       rect.left >= 0 && rect.right <= winDimensions.width + offset && (
-         rect.top >= 0 && rect.top <= bottomline ||
-         rect.bottom <= bottomline && rect.bottom >= 0 - offset
-        )
+        // check if any part of element is in view extented by an offset
+       (rect.left <= winDimensions.width + offset) &&
+       (rect.right >= 0 - offset) &&
+       (rect.top <= winDimensions.height + offset) &&
+       (rect.bottom >= 0 - offset)
       );
     }
 
