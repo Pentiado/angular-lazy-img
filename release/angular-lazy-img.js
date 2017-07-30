@@ -218,22 +218,31 @@ angular.module('angularLazyImg')
       'use strict';
 
       function link(scope, element, attributes) {
-        var lazyImage = new LazyImgMagic(element);
-        attributes.$observe('lazyImg', function (newSource) {
+        var lazyImage = new LazyImgMagic(element),
+            deregister = attributes.$observe('lazyImg', function (newSource) {
           if (newSource) {
-            // in angular 1.3 it might be nice to remove observer here
+            deregister();
             lazyImage.setSource(newSource);
           }
         });
         scope.$on('$destroy', function () {
           lazyImage.removeImage();
+          if(!!$rootScope.lazyImgRefreshEvents) {
+            for (var i=0; i< $rootScope.lazyImgRefreshEvents.length; i++) {
+              $rootScope.lazyImgRefreshEvents[i]();
+            }
+            $rootScope.lazyImgRefreshEvents = [];
+          }
         });
         $rootScope.$on('lazyImg.runCheck', function () {
           lazyImage.checkImages();
         });
-        $rootScope.$on('lazyImg:refresh', function () {
+        if(!$rootScope.lazyImgRefreshEvents) {
+          $rootScope.lazyImgRefreshEvents = [];
+        }
+        $rootScope.lazyImgRefreshEvents.push($rootScope.$on('lazyImg:refresh', function () {
           lazyImage.checkImages();
-        });
+        }));
       }
 
       return {
