@@ -109,7 +109,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     Photo.prototype.setSource = function(source){
       this.src = source;
       images.unshift(this);
-      if (!isListening){ startListening(); }
+      startListening();
     };
 
     Photo.prototype.removeImage = function(){
