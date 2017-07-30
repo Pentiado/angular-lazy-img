@@ -32,6 +32,12 @@ If you want show spinner put it in src attribute
   ```html
   <img src='spinner.gif' lazy-img='photo.jpeg' />
   ```
+  
+If you want load a default image when requested gets an error use lazy-img-error attribute
+
+  ```html
+  <img lazy-img='photo.jpeg' lazy-img-error='no-photo.jpeg' />
+  ```
 
 You want to lazy load background image? No problem, add directive to anything you like and it will handle the rest.
 
