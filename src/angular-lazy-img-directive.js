@@ -4,22 +4,51 @@ angular.module('angularLazyImg')
       'use strict';
 
       function link(scope, element, attributes) {
-        var lazyImage = new LazyImgMagic(element),
-            deregister = attributes.$observe('lazyImg', function (newSource) {
+        scope.lazyImage = new LazyImgMagic(element);
+        var deregister = attributes.$observe('lazyImg', function (newSource) {
           if (newSource) {
             deregister();
-            lazyImage.setSource(newSource);
+            scope.lazyImage.setSource(newSource);
           }
         });
         scope.$on('$destroy', function () {
-          lazyImage.removeImage();
+          scope.lazyImage.removeImage();
+          if(!!$rootScope.lazyImgRefreshEvents) {
+            for (var i=0; i< $rootScope.lazyImgRefreshEvents.length; i++) {
+              $rootScope.lazyImgRefreshEvents[i]();
+            }
+            $rootScope.lazyImgRefreshEvents = [];
+          }
         });
         $rootScope.$on('lazyImg.runCheck', function () {
-          lazyImage.checkImages();
+          scope.lazyImage.checkImages();
         });
         $rootScope.$on('lazyImg:refresh', function () {
-          lazyImage.checkImages();
+          scope.lazyImage.checkImages();
         });
+      }
+
+      return {
+        link: link,
+        restrict: 'A'
+      };
+    }
+  ])
+  .directive('lazyImgError', [
+    function () {
+      'use strict';
+
+      function link(scope, element, attributes) {
+        var deregister = scope.$watch('lazyImage', function(lazyImage) {
+          lazyImage.setErrorSource(attributes.lazyImgError);
+          deregister();
+        });
+        if(!$rootScope.lazyImgRefreshEvents) {
+          $rootScope.lazyImgRefreshEvents = [];
+        }
+        $rootScope.lazyImgRefreshEvents.push($rootScope.$on('lazyImg:refresh', function () {
+          lazyImage.checkImages();
+        }));
       }
 
       return {
