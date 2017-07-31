@@ -1,6 +1,6 @@
 angular.module('angularLazyImg')
   .directive('lazyImg', [
-    '$rootScope', 'LazyImgMagic', function ($rootScope, LazyImgMagic) {
+    '$rootScope', 'LazyImgMagic', function ($rootScope, $log, LazyImgMagic) {
       'use strict';
 
       function link(scope, element, attributes) {
@@ -13,14 +13,15 @@ angular.module('angularLazyImg')
         });
         scope.$on('$destroy', function () {
           scope.lazyImage.removeImage();
-          if(!!$rootScope.lazyImgRefreshEvents) {
-            for (var i=0; i< $rootScope.lazyImgRefreshEvents.length; i++) {
+          if($rootScope.lazyImgRefreshEvents) {
+            for (var i = 0; i< $rootScope.lazyImgRefreshEvents.length; i++) {
               $rootScope.lazyImgRefreshEvents[i]();
             }
             $rootScope.lazyImgRefreshEvents = [];
           }
         });
         $rootScope.$on('lazyImg.runCheck', function () {
+          $log.warn('Deprecated. Use lazyImg:refresh instead');
           scope.lazyImage.checkImages();
         });
         $rootScope.$on('lazyImg:refresh', function () {

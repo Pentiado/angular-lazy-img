@@ -40,7 +40,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
           images.splice(i, 1);
         }
       }
-      if(images.length === 0){ stopListening(); }
+      if(!images.length){ stopListening(); }
     }
 
     checkImagesT = lazyImgHelpers.throttle(checkImages, 30);
@@ -142,6 +142,5 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     };
 
     return Photo;
-
   }
 ]);

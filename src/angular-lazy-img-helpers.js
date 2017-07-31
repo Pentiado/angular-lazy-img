@@ -45,6 +45,5 @@ angular.module('angularLazyImg').factory('lazyImgHelpers', [
       getWinDimensions: getWinDimensions,
       throttle: throttle
     };
-
   }
 ]);

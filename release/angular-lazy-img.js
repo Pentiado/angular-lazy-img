@@ -40,7 +40,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
           images.splice(i, 1);
         }
       }
-      if(images.length === 0){ stopListening(); }
+      if(!images.length){ stopListening(); }
     }
 
     checkImagesT = lazyImgHelpers.throttle(checkImages, 30);
@@ -113,7 +113,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     Photo.prototype.setSource = function(source){
       this.src = source;
       images.unshift(this);
-      if (!isListening){ startListening(); }
+      startListening();
     };
 
     Photo.prototype.setErrorSource = function(errorSource){
@@ -142,7 +142,6 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
     };
 
     return Photo;
-
   }
 ]);
 
@@ -183,12 +182,12 @@ angular.module('angularLazyImg').factory('lazyImgHelpers', [
 
     function isElementInView(elem, offset, winDimensions) {
       var rect = elem.getBoundingClientRect();
-      var bottomline = winDimensions.height + offset;
       return (
-       rect.left >= 0 && rect.right <= winDimensions.width + offset && (
-         rect.top >= 0 && rect.top <= bottomline ||
-         rect.bottom <= bottomline && rect.bottom >= 0 - offset
-        )
+        // check if any part of element is in view extented by an offset
+       (rect.left <= winDimensions.width + offset) &&
+       (rect.right >= 0 - offset) &&
+       (rect.top <= winDimensions.height + offset) &&
+       (rect.bottom >= 0 - offset)
       );
     }
 
@@ -217,12 +216,12 @@ angular.module('angularLazyImg').factory('lazyImgHelpers', [
       getWinDimensions: getWinDimensions,
       throttle: throttle
     };
-
   }
 ]);
+
 angular.module('angularLazyImg')
   .directive('lazyImg', [
-    '$rootScope', 'LazyImgMagic', function ($rootScope, LazyImgMagic) {
+    '$rootScope', 'LazyImgMagic', function ($rootScope, $log, LazyImgMagic) {
       'use strict';
 
       function link(scope, element, attributes) {
@@ -234,15 +233,16 @@ angular.module('angularLazyImg')
           }
         });
         scope.$on('$destroy', function () {
-          lazyImage.removeImage();
-          if(!!$rootScope.lazyImgRefreshEvents) {
-            for (var i=0; i< $rootScope.lazyImgRefreshEvents.length; i++) {
+          scope.lazyImage.removeImage();
+          if($rootScope.lazyImgRefreshEvents) {
+            for (var i = 0; i< $rootScope.lazyImgRefreshEvents.length; i++) {
               $rootScope.lazyImgRefreshEvents[i]();
             }
             $rootScope.lazyImgRefreshEvents = [];
           }
         });
         $rootScope.$on('lazyImg.runCheck', function () {
+          $log.warn('Deprecated. Use lazyImg:refresh instead');
           scope.lazyImage.checkImages();
         });
         $rootScope.$on('lazyImg:refresh', function () {
@@ -265,7 +265,6 @@ angular.module('angularLazyImg')
           lazyImage.setErrorSource(attributes.lazyImgError);
           deregister();
         });
-
         if(!$rootScope.lazyImgRefreshEvents) {
           $rootScope.lazyImgRefreshEvents = [];
         }
