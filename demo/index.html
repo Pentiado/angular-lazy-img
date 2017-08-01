@@ -10,9 +10,9 @@
 
 <div>
     <!-- example how to use image set using srcset and ratio -->
-    <div ng-repeat="image in $ctrl.images track by $index">
-        <img src='./loader.gif' lazy-img="{{image}}" lazy-img-error="http://placehold.it/200x200?text=lazy-img-error" width="200" height="200" style="margin-bottom: 300px;" />
-    </div>
+    <div ng-repeat="image in $ctrl.images track by image.id">
+        <img src='./loader.gif' lazy-img="{{image.url}}" lazy-img-error="http://placehold.it/200x200?text=lazy-img-error" width="200" height="200" style="margin-bottom: 300px;" />
+    </div>>
 </div>
 
 <script src="../node_modules/angular/angular.js"></script>

@@ -125,9 +125,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
       if(images.length === 0){ stopListening(); }
     };
 
-    Photo.prototype.checkImages = function(){
-      checkImages();
-    };
+    Photo.prototype.checkImages = checkImages;
 
     Photo.addContainer = function (container) {
       stopListening();

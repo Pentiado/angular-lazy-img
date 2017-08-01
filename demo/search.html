@@ -8,9 +8,10 @@
 </head>
 <body ng-controller="appCtrl as $ctrl">
 
-<div lazy-img-container style="height: 600px; border: 1px solid black; overflow: scroll;">
+<div>
     <!-- example how to use image set using srcset and ratio -->
-    <div ng-repeat="image in $ctrl.images track by image.id">
+    <input type="text" ng-model="$ctrl.search.randomColorName" ng-change="$ctrl.refresh()">
+    <div ng-repeat="image in $ctrl.images | filter:$ctrl.search track by image.id">
         <img src='./loader.gif' lazy-img="{{image.url}}" lazy-img-error="http://placehold.it/200x200?text=lazy-img-error" width="200" height="200" style="margin-bottom: 300px;" />
     </div>
 </div>
