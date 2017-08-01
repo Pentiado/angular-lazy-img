@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html ng-app="demo-app" id="ng-app" class="js">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>angular-lazy-img</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+</head>
+<body ng-controller="appCtrl as $ctrl">
+
+<div class="demo-wrapper">
+    <!-- example how to use image set using srcset and ratio -->
+    <div ng-repeat="image in $ctrl.images track by $index">
+        <img src='./loader.gif' lazy-img="{{image}}" lazy-img-error="http://placehold.it/200x200?text=lazy-img-error" width="200" height="200" style="margin-bottom: 300px;" />
+    </div>
+</div>
+
+<script src="../node_modules/angular/angular.js"></script>
+<script src="../release/angular-lazy-img.js"></script>
+
+<script src="./index.js"></script>
+</body>
+</html>

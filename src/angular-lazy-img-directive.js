@@ -36,7 +36,7 @@ angular.module('angularLazyImg')
     }
   ])
   .directive('lazyImgError', [
-    function () {
+    '$rootScope', function ($rootScope) {
       'use strict';
 
       function link(scope, element, attributes) {
