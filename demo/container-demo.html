@@ -8,7 +8,7 @@
 </head>
 <body ng-controller="appCtrl as $ctrl">
 
-<div>
+<div lazy-img-container style="height: 600px; border: 1px solid black; overflow: scroll;">
     <!-- example how to use image set using srcset and ratio -->
     <div ng-repeat="image in $ctrl.images track by $index">
         <img src='./loader.gif' lazy-img="{{image}}" lazy-img-error="http://placehold.it/200x200?text=lazy-img-error" width="200" height="200" style="margin-bottom: 300px;" />
