@@ -83,16 +83,20 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
         if(photo.errorSrc){
           setPhotoSrc(photo.$elem, photo.errorSrc);
         }
-        $rootScope.$emit('lazyImg:error', photo);
-        options.onError(photo);
+        $rootScope.$apply(function () {
+          $rootScope.$emit('lazyImg:error', photo);
+          options.onError(photo);
+        });
       };
       img.onload = function(){
         setPhotoSrc(photo.$elem, photo.src);
         if(options.successClass){
           photo.$elem.addClass(options.successClass);
         }
-        $rootScope.$emit('lazyImg:success', photo);
-        options.onSuccess(photo);
+        $rootScope.$apply(function () {
+          $rootScope.$emit('lazyImg:success', photo);
+          options.onSuccess(photo);
+        });
       };
       img.src = photo.src;
     }
@@ -122,7 +126,7 @@ angular.module('angularLazyImg').factory('LazyImgMagic', [
 
     Photo.prototype.removeImage = function(){
       removeImage(this);
-      if(images.length === 0){ stopListening(); }
+      if(!images.length){ stopListening(); }
     };
 
     Photo.prototype.checkImages = checkImages;
@@ -167,6 +171,7 @@ angular.module('angularLazyImg').provider('lazyImgConfig', function() {
     angular.extend(this.options, options);
   };
 });
+
 angular.module('angularLazyImg').factory('lazyImgHelpers', [
   '$window', function($window){
     'use strict';
