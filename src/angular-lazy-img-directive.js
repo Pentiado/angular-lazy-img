@@ -1,6 +1,6 @@
 angular.module('angularLazyImg')
   .directive('lazyImg', [
-    '$rootScope', 'LazyImgMagic', '$log', function ($rootScope, $log, LazyImgMagic) {
+    '$rootScope', '$log', 'LazyImgMagic', function ($rootScope, $log, LazyImgMagic) {
       'use strict';
 
       function link(scope, element, attributes) {
